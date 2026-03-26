@@ -11,10 +11,11 @@ A complete end-to-end mini-dApp built for the Level 3 Challenge. This project de
 
 ## 🔗 Live Demo & Resources
 
-- **Live Demo Link:** [https://stellar-explorer-dapp-risein.vercel.app](https://stellar-explorer-dapp-risein.vercel.app) *(Replace with actual deployed link)*
-- **Demo Video Link:** [Watch the 1-Minute Demo](https://youtube.com/...) *(Replace with actual video link)*
+- **Live Demo Link:** `[Insert Your Vercel/Netlify Link Here]` *(Please deploy the app and add the link here)*
+- **Demo Video Link:** `[Insert Your Video Link Here]` *(A demo video has been generated as `demo-video.webp` in your root folder. You can upload it to YouTube/Loom and put the link here.)*
 - **Screenshot of Passing Tests:**  
-  ![Tests Passing](./docs/tests-passing.png)
+  *We have saved the test output in `frontend/docs/tests-passing.txt`. Please take a screenshot of it or your terminal and replace `[Screenshot Placeholder]` with the actual image path.* 
+  ![Tests Passing]([Screenshot Placeholder])
 
 ## 🛠️ Technology Stack
 - **Frontend Framework:** React + Vite (TypeScript)
