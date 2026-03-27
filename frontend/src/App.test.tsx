@@ -1,11 +1,10 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import App from './App';
-import React from 'react';
 
 // Mock fetch globally
 const mockFetch = vi.fn();
-global.fetch = mockFetch;
+globalThis.fetch = mockFetch;
 
 describe('Stellar Explorer App', () => {
     beforeEach(() => {
@@ -106,5 +105,48 @@ describe('Stellar Explorer App', () => {
         }, { timeout: 1000 });
 
         expect(screen.getByText('Account not found or invalid on Testnet')).toBeInTheDocument();
+    });
+
+    it('5. should show a progress bar during fetching', async () => {
+        // Hangs the fetch
+        mockFetch.mockImplementationOnce(() => new Promise(() => { }));
+
+        render(<App />);
+        const input = screen.getByTestId('account-input');
+        const button = screen.getByTestId('search-button');
+
+        fireEvent.change(input, { target: { value: 'GA_PROGRESS' } });
+        fireEvent.click(button);
+
+        expect(screen.getByTestId('progress-bar')).toBeInTheDocument();
+        expect(screen.getByTestId('progress-bar')).toHaveClass('progress-active');
+    });
+
+    it('6. should persist and display search history', async () => {
+        const mockData = {
+            id: 'GA_HISTORY_123',
+            balances: [{ asset_type: 'native', balance: '10' }],
+            sequence: '1'
+        };
+
+        mockFetch.mockResolvedValue({
+            ok: true,
+            json: async () => mockData
+        } as Response);
+
+        render(<App />);
+        const input = screen.getByTestId('account-input');
+        const button = screen.getByTestId('search-button');
+
+        fireEvent.change(input, { target: { value: 'GA_HISTORY_123' } });
+        fireEvent.click(button);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('result-card')).toBeInTheDocument();
+        }, { timeout: 1500 });
+
+        // History item should be visible (shortened version: GA_HIS..._123)
+        // Correctly formatted as: GA_HIS..._123 in the component
+        expect(screen.getByText(/GA_HIS..._123/i)).toBeInTheDocument();
     });
 });

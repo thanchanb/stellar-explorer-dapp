@@ -1,12 +1,16 @@
 
-[1m[46m RUN [49m[22m [36mv4.1.1 [39m[90m/Users/thanchanbhumij/Rise-In(3)/frontend[39m
+ RUN  v4.1.1 /Users/thanchanbhumij/Rise-In(3)/frontend
 
- [32m✓[39m src/App.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1349[2mms[22m[39m
-     [33m[2m✓[22m[39m 2. should fetch and display data successfully [33m 818[2mms[22m[39m
-     [33m[2m✓[22m[39m 3. should use cached data instead of fetching twice [33m 507[2mms[22m[39m
-
-[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
-[2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
-[2m   Start at [22m 10:20:35
-[2m   Duration [22m 2.04s[2m (transform 42ms, setup 55ms, import 103ms, tests 1.35s, environment 464ms)[22m
-
+ ✓ src/App.test.tsx (6 tests) 2700ms
+   ✓ Stellar Explorer App (6)
+     ✓ 1. should show loading state when fetching 22ms
+     ✓ 2. should fetch and display data successfully  1022ms
+     ✓ 3. should use cached data instead of fetching twice  617ms
+     ✓ 4. should show an error message on API failure 13ms
+     ✓ 5. should show a progress bar during fetching 5ms
+     ✓ 6. should persist and display search history  1020ms
+                 
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  13:39:57
+   Duration  3.28s (transform 36ms, setup 41ms, import 94ms, tests 2.70s, environment 376ms)

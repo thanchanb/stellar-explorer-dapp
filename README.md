@@ -5,9 +5,10 @@ A complete end-to-end mini-dApp built for the Level 3 Challenge. This project de
 ## 🌟 Features
 
 - **Real-time Stellar Account Fetching:** Instantly retrieve any Stellar Testnet account balance and details.
-- **Progress Indicators:** Modern UI with glassmorphism design and beautiful loading spinners.
-- **Intelligent Caching:** Implements `sessionStorage` caching. Subsequent searches for the same account load instantly without hitting the API.
-- **Robust Testing:** Includes 4x unit tests covering UI states, data fetching, API errors, and caching using Vitest and React Testing Library.
+- **Progress Indicators:** Modern UI with glassmorphism design, loading spinners, and a sleek animated progress bar.
+- **Intelligent Caching:** Implements `sessionStorage` caching for instant re-loads and `localStorage` for search history persistence.
+- **Robust Testing:** Includes 6x unit tests covering UI states, data fetching, API errors, caching, and progress indicators using Vitest and React Testing Library.
+- **Recent Searches:** Keep track of your last 5 searched accounts for quick access.
 
 ## 🔗 Live Demo & Resources
 
@@ -58,7 +59,7 @@ npm run test
 
 ## ✅ Requirements Checklist Fulfilled
 - [x] Mini-dApp fully functional
-- [x] Minimum 3 tests passing (4 implemented)
+- [x] Minimum 3 tests passing (6 implemented)
 - [x] README complete
 - [x] Demo video recorded (pending upload by user)
 - [x] Minimum 3+ meaningful commits
