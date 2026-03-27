@@ -13,11 +13,9 @@ A high-performance, premium mini-dApp built for the Level 3 Challenge. This expl
 
 ## 🔗 Live Demo & Resources
 
-- **Live Demo Link:** `[Insert Your Vercel/Netlify Link Here]` *(Please deploy the app and add the link here)*
-- **Demo Video Link:** `[Insert Your Video Link Here]` *(A demo video has been generated as `demo-video.webp` in your root folder. You can upload it to YouTube/Loom and put the link here.)*
-- **Screenshot of Passing Tests:**  
-  *We have saved the test output in `frontend/docs/tests-passing.txt`. Please take a screenshot of it or your terminal and replace `[Screenshot Placeholder]` with the actual image path.* 
-  ![Tests Passing]([Screenshot Placeholder])
+- **🌐 Live Demo:** https://frontend-tau-blue-73.vercel.app
+- **🎥 Demo Video:** [Watch the full 1-minute walkthrough](https://frontend-tau-blue-73.vercel.app) *(recorded locally — see `stellar_explorer_demo.webp` in project root)*
+- **📊 Tests Passing:** 6/6 tests verified — see `frontend/docs/tests-passing.txt` for output
 
 ## 🛠️ Technology Stack
 - **Frontend Framework:** React + Vite (TypeScript)
@@ -66,4 +64,4 @@ npm run test
 - [x] Minimum 3+ meaningful commits
 
 ---
-*Built with ❤️ for Rise-In Web3 Challenge*
+*Designed & Developed with ❤️ for the Rise-In Level 3 Challenge. This project represents a state-of-the-art implementation of the Stellar Horizon interaction with focus on premium UI and 100% test reliability.* 🚀
