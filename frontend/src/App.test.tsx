@@ -7,6 +7,12 @@ import '@testing-library/jest-dom';
 const mockFetch = vi.fn();
 globalThis.fetch = mockFetch;
 
+// Mock Freighter API
+vi.mock('@stellar/freighter-api', () => ({
+    isConnected: vi.fn(() => Promise.resolve(false)),
+    getAddress: vi.fn(() => Promise.resolve({ address: '' })),
+}));
+
 describe('Stellar Explorer App', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -66,8 +72,8 @@ describe('Stellar Explorer App', () => {
             sequence: '99999'
         };
 
-        // Pre-populate sessionStorage with the NEW key format
-        sessionStorage.setItem('stellar_p_acc_GCACHE123456', JSON.stringify(mockData));
+        // Pre-populate sessionStorage with the P3 key format
+        sessionStorage.setItem('stellar_p3_acc_GCACHE123456', JSON.stringify(mockData));
 
         render(<App />);
         const input = screen.getByTestId('account-input');
@@ -143,7 +149,7 @@ describe('Stellar Explorer App', () => {
             expect(screen.getByTestId('result-card')).toBeInTheDocument();
         }, { timeout: 3000 });
 
-        // History item should be visible (check for start and end segments with new 10-char slice)
+        // History item should be visible
         expect(screen.getByText(/GA_HISTORY/i)).toBeInTheDocument();
         expect(screen.getByText(/DDRESS_123/i)).toBeInTheDocument();
     });

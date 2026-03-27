@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRightLeft, History, RefreshCw, LogOut, Search, Activity, ExternalLink } from 'lucide-react';
+import { ArrowRightLeft, History, RefreshCw, LogOut, Search, Activity, ExternalLink, Wallet } from 'lucide-react';
+import { isConnected, getAddress } from "@stellar/freighter-api";
 import './index.css';
 
 interface AccountData {
@@ -10,6 +11,7 @@ interface AccountData {
 
 const App: React.FC = () => {
   const [accountId, setAccountId] = useState('');
+  const [connectedWallet, setConnectedWallet] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<AccountData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -18,21 +20,60 @@ const App: React.FC = () => {
   const [network, setNetwork] = useState<'testnet' | 'mainnet'>('testnet');
 
   useEffect(() => {
-    const saved = localStorage.getItem('stellar_history_v2');
+    const saved = localStorage.getItem('stellar_history_v3');
     if (saved) setHistory(JSON.parse(saved));
+
+    // Check initial Freighter connection
+    checkWalletConnection();
   }, []);
+
+  const checkWalletConnection = async () => {
+    try {
+      if (await isConnected()) {
+        const addressData = await getAddress();
+        if (addressData && addressData.address) setConnectedWallet(addressData.address);
+      }
+    } catch (err) {
+      console.error("Freighter check failed", err);
+    }
+  };
+
+  const connectWallet = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      if (await isConnected()) {
+        const addressData = await getAddress();
+        if (addressData && addressData.address) {
+          setConnectedWallet(addressData.address);
+          setAccountId(addressData.address);
+          fetchAccount(addressData.address);
+        }
+      } else {
+        setError("Freighter wallet not found. Please install the extension.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Failed to connect wallet");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addToHistory = (id: string) => {
     const newHistory = [id, ...history.filter(h => h !== id)].slice(0, 5);
     setHistory(newHistory);
-    localStorage.setItem('stellar_history_v2', JSON.stringify(newHistory));
+    localStorage.setItem('stellar_history_v3', JSON.stringify(newHistory));
   };
 
   const fetchAccount = async (e?: React.FormEvent | string) => {
     if (e && typeof e !== 'string') e.preventDefault();
     const idToFetch = typeof e === 'string' ? e : accountId;
 
-    if (!idToFetch) return;
+    if (!idToFetch) {
+      setError("Please enter a valid Stellar address");
+      return;
+    }
+
     if (typeof e === 'string') setAccountId(idToFetch);
 
     setLoading(true);
@@ -40,7 +81,7 @@ const App: React.FC = () => {
     setIsCached(false);
 
     try {
-      const cacheKey = `stellar_p_acc_${idToFetch}`;
+      const cacheKey = `stellar_p3_acc_${idToFetch}`;
       const cachedData = sessionStorage.getItem(cacheKey);
 
       if (cachedData) {
@@ -55,7 +96,7 @@ const App: React.FC = () => {
       const response = await fetch(`https://horizon-testnet.stellar.org/accounts/${idToFetch}`);
 
       if (!response.ok) {
-        throw new Error('Account not found or invalid on Testnet');
+        throw new Error('Account not found on Testnet');
       }
 
       const result = await response.json();
@@ -110,155 +151,145 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="wallet-pill">
-            <div className="status-dot"></div>
-            <span>{data ? `${data.id.substring(0, 8)}...` : 'Ready to Connect'}</span>
-          </div>
-
-          <div className="disconnect-btn" onClick={() => { setData(null); setAccountId(''); }} title="Reset Explorer">
-            <LogOut size={20} />
-          </div>
+          {connectedWallet ? (
+            <div className="wallet-pill active">
+              <div className="status-dot"></div>
+              <span>{connectedWallet.substring(0, 4)}...{connectedWallet.slice(-4)}</span>
+              <LogOut size={16} className="logout-btn" onClick={() => setConnectedWallet(null)} />
+            </div>
+          ) : (
+            <button className="connect-wallet-btn" onClick={connectWallet} disabled={loading}>
+              <Wallet size={16} /> CONNECT WALLET
+            </button>
+          )}
         </div>
       </header>
 
       <main className="main-content">
         <div className="left-column">
-          <section className="card balance-card" data-testid="result-card">
+          <section className="card balance-card" data-testid="result-card" style={{ display: data || loading ? 'block' : 'none' }}>
             <div className="card-title">
-              <Activity size={18} /> ASSET OVERVIEW
+              <Activity size={18} /> LIVE ACCOUNT BALANCE
             </div>
             <div className="amount" style={{ color: loading ? 'var(--text-secondary)' : 'white' }} data-testid="balance-amount">
-              {data ? parseFloat(nativeBalance).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 }) : '0.00000'} XLM
+              {loading ? '0.00000' : parseFloat(nativeBalance).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })} XLM
             </div>
             <div className="currency" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               STELLAR LUMENS
-              {isCached && <span className="cache-badge" data-testid="cache-badge">SECURED BY CACHE</span>}
+              {isCached && <span className="cache-badge" data-testid="cache-badge">CACHED DATA</span>}
             </div>
 
             <div className="card-footer">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div className="status-dot" style={{ width: '8px', height: '8px' }}></div>
-                <span style={{ fontWeight: 700, fontSize: '0.8rem' }}>NETWORK: TESTNET</span>
+                <span style={{ fontWeight: 700, fontSize: '0.75rem' }}>SYNCED: {network.toUpperCase()}</span>
               </div>
               <div className="refresh-action" onClick={() => fetchAccount()}>
-                <RefreshCw size={14} className={loading ? 'spin' : ''} style={{ opacity: loading ? 0.5 : 1 }} />
-                <span style={{ marginLeft: '4px' }}>Sync Dashboard</span>
+                <RefreshCw size={14} className={loading ? 'spin' : ''} />
+                <span style={{ marginLeft: '4px' }}>Force Refresh</span>
               </div>
             </div>
           </section>
 
-          <section className="card transfer-card">
+          <section className="card lookup-card">
             <div className="card-title">
-              <ArrowRightLeft size={18} /> ACCOUNT LOOKUP & TRANSFERS
+              <Search size={18} /> ACCOUNT SEARCH
             </div>
 
             <div className="input-group">
-              <label className="input-label">Public Address (G...)</label>
+              <label className="input-label">Stellar Public Address</label>
               <form onSubmit={fetchAccount} style={{ position: 'relative' }}>
                 <input
                   type="text"
                   className="input-style"
-                  placeholder="Paste Stellar account address..."
+                  placeholder="Enter G... address"
                   value={accountId}
                   onChange={(e) => setAccountId(e.target.value)}
                   disabled={loading}
                   data-testid="account-input"
-                  style={{ paddingRight: '120px' }}
                 />
                 <button
                   type="submit"
-                  className="initiate-btn"
-                  style={{
-                    position: 'absolute',
-                    right: '6px',
-                    top: '6px',
-                    bottom: '6px',
-                    width: 'auto',
-                    padding: '0 20px',
-                    borderRadius: '12px',
-                    fontSize: '0.8rem',
-                    boxShadow: 'none'
-                  }}
+                  className="explore-btn-overlay"
                   disabled={loading || !accountId}
                   data-testid="search-button"
                 >
                   {loading ? (
                     <div className="spinner" data-testid="loading-spinner"></div>
                   ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Search size={16} /> EXPLORE
-                    </div>
+                    <ArrowRightLeft size={18} />
                   )}
                 </button>
               </form>
               {error && <div className="error-message" data-testid="error-message">{error}</div>}
-              {loading && <div style={{ fontSize: '0.75rem', color: 'var(--primary)', marginTop: '8px', fontWeight: 600 }}>Syncing with Stellar Horizon...</div>}
             </div>
 
-            <div className="transfer-grid" style={{ opacity: 0.5, pointerEvents: 'none' }}>
-              <div className="input-group">
-                <label className="input-label">Amount (XLM)</label>
-                <input type="text" className="input-style" placeholder="0.00" disabled />
+            <div className="tools-grid">
+              <div className="tool-card disabled">
+                <div className="tool-info">
+                  <div className="tool-name">Transfer Funds</div>
+                  <div className="tool-desc">Soroban contracts ready</div>
+                </div>
+                <div className="status-tag">LOCKED</div>
               </div>
-              <div className="input-group">
-                <label className="input-label">Destination Memo</label>
-                <input type="text" className="input-style" placeholder="Message..." disabled />
+              <div className="tool-card disabled">
+                <div className="tool-info">
+                  <div className="tool-name">Mint Asset</div>
+                  <div className="tool-desc">Custom token factory</div>
+                </div>
+                <div className="status-tag">LOCKED</div>
               </div>
             </div>
-
-            <button className="initiate-btn" style={{ opacity: 0.3 }} disabled>INITIATE TRANSACTION</button>
           </section>
         </div>
 
         <div className="right-column">
-          <section className="card history-card" style={{ height: '100%' }}>
+          <section className="card history-card">
             <div className="history-header">
               <div className="card-title" style={{ margin: 0 }}>
-                <History size={18} /> SEARCH HISTORY
+                <History size={18} /> RECENT EXPLORATIONS
               </div>
-              <div
-                className="refresh-action"
-                style={{ fontSize: '0.7rem', fontWeight: 800, padding: '4px 10px' }}
-                onClick={() => { localStorage.removeItem('stellar_history_v2'); setHistory([]); }}
-              >
-                PURGE LOGS
-              </div>
+              {history.length > 0 && (
+                <button className="clear-btn" onClick={() => { localStorage.removeItem('stellar_history_v3'); setHistory([]); }}>
+                  CLEAR
+                </button>
+              )}
             </div>
 
             {history.length > 0 ? (
-              <div className="history-list" style={{ marginTop: '2rem' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '1.5rem', textTransform: 'uppercase' }}>
-                  RECENT PERSISTENT STORAGE
-                </div>
+              <div className="history-list">
                 {history.map(id => (
                   <div
                     key={id}
                     className="history-item"
                     onClick={() => fetchAccount(id)}
                   >
-                    <span>{id.substring(0, 10).toUpperCase()}...{id.slice(-10).toUpperCase()}</span>
-                    <ExternalLink size={16} style={{ color: 'var(--primary)', opacity: 0.6 }} />
+                    <div className="history-info">
+                      <div className="history-address">{id.substring(0, 10)}...{id.slice(-10)}</div>
+                      <div className="history-meta">Testnet Exploration</div>
+                    </div>
+                    <ExternalLink size={14} className="history-link" />
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="empty-state" style={{ marginTop: '3rem', flexDirection: 'column', gap: '15px' }}>
-                <History size={48} style={{ opacity: 0.1 }} />
-                <span>NO PERSISTENT HISTORY FOUND</span>
+              <div className="empty-state">
+                <Search size={32} style={{ opacity: 0.1, marginBottom: '10px' }} />
+                <div>No Exploration History</div>
+                <p>Searched accounts will appear here for 1-click access.</p>
               </div>
             )}
           </section>
         </div>
       </main>
 
-      <footer style={{ padding: '2rem', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border)' }}>
-        ⚡ Powered by Stellar Horizon Testnet • Premium High-Fidelity Dashboard v3.0
+      <footer className="footer">
+        <div className="footer-content">
+          <span>⚡ Stellar Premium Explorer v3.0</span>
+          <span className="footer-separator"></span>
+          <span style={{ color: 'var(--text-secondary)' }}>End-to-End Soroban dApp Challenge</span>
+        </div>
       </footer>
-
-      <style>{`
-        .spin { animation: rotate 2s linear infinite; }
-        @keyframes rotate { 100% { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 };

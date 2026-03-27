@@ -4,6 +4,7 @@ A high-performance, premium mini-dApp built for the Level 3 Challenge. This expl
 
 ## 🌟 Features
 
+- **🔐 Freighter Wallet Integration:** Connect your real Stellar wallet to fetch balance instantly.
 - **Premium Modern Dashboard:** A dark-mode, glassmorphic UI with independent cards for balance, transfers, and history.
 - **Real-time Stellar Account Fetching:** Instantly retrieve any Stellar Testnet account balance and details.
 - **Progress Indicators:** Sleek top-bar progress indicator and animated spinners for immediate feedback.
