@@ -16,9 +16,11 @@ A high-performance, premium mini-dApp built for the Level 3 Challenge. This expl
 
 - **🌐 Live Demo:** https://frontend-tau-blue-73.vercel.app
 - **🎥 Demo Video:** [Watch the full walkthrough](https://frontend-tau-blue-73.vercel.app) *(or see `stellar_explorer_demo.webp` in repo root)*
-- **✅ Test Results:** **6/6 Tests Passing** (Vitest). Verification available in `frontend/docs/tests-passing.txt`.
+- **✅ Test Results:** **6/6 Tests Passing** (Vitest).
 
-### 📊 Verification:
+![Verified Test Results](frontend/docs/test-output.png)
+
+### 📊 Verification Details:
 ```bash
  ✓ src/App.test.tsx (6 tests)
    ✓ 1. should show loading state when fetching
