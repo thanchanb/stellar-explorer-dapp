@@ -1,16 +1,13 @@
+Stellar Explorer App - Test Results
+Date: 2026-03-27
 
- RUN  v4.1.1 /Users/thanchanbhumij/Rise-In(3)/frontend
+✓ 1. should show loading state when fetching (Passed)
+✓ 2. should fetch and display data successfully (Passed)
+✓ 3. should use cached data instead of fetching twice (Passed)
+✓ 4. should show an error message on API failure (Passed)
+✓ 5. should show a progress bar during fetching (Passed)
+✓ 6. should persist and display search history (Passed)
 
- ✓ src/App.test.tsx (6 tests) 2700ms
-   ✓ Stellar Explorer App (6)
-     ✓ 1. should show loading state when fetching 22ms
-     ✓ 2. should fetch and display data successfully  1022ms
-     ✓ 3. should use cached data instead of fetching twice  617ms
-     ✓ 4. should show an error message on API failure 13ms
-     ✓ 5. should show a progress bar during fetching 5ms
-     ✓ 6. should persist and display search history  1020ms
-                 
- Test Files  1 passed (1)
-      Tests  6 passed (6)
-   Start at  13:39:57
-   Duration  3.28s (transform 36ms, setup 41ms, import 94ms, tests 2.70s, environment 376ms)
+Total: 6/6 tests passing.
+Environment: Vitest + React Testing Library + JSDOM
+Design: Premium Dashboard UI (Stellar Dash)

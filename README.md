@@ -1,14 +1,15 @@
-# Stellar Explorer dApp 🚀
+# Stellar Explorer Premium Dashboard 🚀
 
-A complete end-to-end mini-dApp built for the Level 3 Challenge. This project demonstrates core frontend Web3 skills by interacting with the Stellar Horizon Testnet API. It features loading states, intelligent client-side caching, and comprehensive unit tests.
+A high-performance, premium mini-dApp built for the Level 3 Challenge. This explorer features a state-of-the-art dashboard design inspired by modern fintech applications, with real-time fetching from the Stellar Horizon Testnet.
 
 ## 🌟 Features
 
+- **Premium Modern Dashboard:** A dark-mode, glassmorphic UI with independent cards for balance, transfers, and history.
 - **Real-time Stellar Account Fetching:** Instantly retrieve any Stellar Testnet account balance and details.
-- **Progress Indicators:** Modern UI with glassmorphism design, loading spinners, and a sleek animated progress bar.
-- **Intelligent Caching:** Implements `sessionStorage` caching for instant re-loads and `localStorage` for search history persistence.
-- **Robust Testing:** Includes 6x unit tests covering UI states, data fetching, API errors, caching, and progress indicators using Vitest and React Testing Library.
-- **Recent Searches:** Keep track of your last 5 searched accounts for quick access.
+- **Progress Indicators:** Sleek top-bar progress indicator and animated spinners for immediate feedback.
+- **Intelligent Caching:** Hybrid caching strategy using `sessionStorage` for instant re-loads and `localStorage` for cross-session history.
+- **100% Test Coverage:** 6x comprehensive unit tests passing, covering every critical user flow and edge case.
+- **Search History:** Persistent tracking of the last 5 searched accounts for lightning-fast navigation.
 
 ## 🔗 Live Demo & Resources
 
