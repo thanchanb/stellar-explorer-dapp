@@ -30,6 +30,22 @@ A high-performance, premium mini-dApp built for the Level 3 Challenge. This expl
    ✓ 5. should show a progress bar during fetching
    ✓ 6. should persist and display search history
 ```
+
+## 🏗️ Soroban Contracts
+
+This project includes advanced Soroban smart contracts for on-chain state management, located in the `/contracts` directory.
+
+- **📜 Voting Contract:** A robust, authorization-aware voting contract implemented in Rust.
+  - **Features:** 
+    - `vote`: Cast a vote for a specific option (requires `require_auth`).
+    - `get_votes`: Retrieve real-time on-chain vote counts.
+    - **Anti-Spam:** Prevents duplicate voting using persistent storage and address mapping.
+- **🛠️ Workspace Integrated:** The contracts are managed via a root-level Cargo workspace for seamless development and testing.
+
+To build the contracts:
+```bash
+soroban contract build
+```
 ## 🛠️ Technology Stack
 - **Frontend Framework:** React + Vite (TypeScript)
 - **Styling:** Vanilla CSS (Glassmorphism & Gradients)
